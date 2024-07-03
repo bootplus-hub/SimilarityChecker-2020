@@ -9,8 +9,21 @@ public:
 		int leftLen = (int)leftStr.length();
 		int rightLen = (int)rightStr.length();
 
-		if (leftLen == rightLen) return 60;
-		if (min(leftLen, rightLen) / (double)max(leftLen, rightLen) < 0.5) return 0;
+		if (isPerfectScore(leftLen, rightLen)) return 60;
+		if (isZeroScore(leftLen, rightLen)) return 0;
+		return calcScore(leftLen, rightLen);
+	}
+
+protected:
+	bool isZeroScore(int leftLen, int rightLen) const {
+		return min(leftLen, rightLen) / (double)max(leftLen, rightLen) < 0.5;
+	}
+
+	bool isPerfectScore(int leftLen, int rightLen) const {
+		return leftLen == rightLen;
+	}
+
+	int calcScore(int leftLen, int rightLen) const {
 		return (int)((1 - abs(leftLen - rightLen) / (double)min(leftLen, rightLen)) * 60);
 	}
 };
