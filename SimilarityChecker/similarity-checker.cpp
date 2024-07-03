@@ -5,7 +5,7 @@ using namespace std;
 
 class SimilarityChecker {
 public:
-	int length(const string& leftStr, const string& rightStr) {
+	int score(const string& leftStr, const string& rightStr) {
 		int leftLen = (int)leftStr.length();
 		int rightLen = (int)rightStr.length();
 
