@@ -1,6 +1,7 @@
 #include <string>
 #include <algorithm>
 #include <memory>
+#include <unordered_set>
 #include <unordered_map>
 #include <stdexcept>
 
@@ -71,7 +72,10 @@ public:
 	}
 
 	virtual bool isPerfectScore(const string& leftStr, const string& rightStr) const {
-		return true;
+		unordered_set<char> left, right;
+		for (char ch : leftStr) left.insert(ch);
+		for (char ch : rightStr) right.insert(ch);
+		return left == right;
 	}
 
 	virtual int getPerfectScoure() const {

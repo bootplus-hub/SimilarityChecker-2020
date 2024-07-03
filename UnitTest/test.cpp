@@ -48,4 +48,5 @@ TEST_F(SimilarityCheckerFixture, AlphaPerfact) {
 	injectAlpha();
 
 	EXPECT_EQ(40, checker.score("ASD", "DSA"));
+	EXPECT_EQ(40, checker.score("AAABB", "BA"));
 }

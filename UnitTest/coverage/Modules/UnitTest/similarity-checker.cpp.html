@@ -12,6 +12,7 @@
 #include &lt;string&gt;
 #include &lt;algorithm&gt;
 #include &lt;memory&gt;
+#include &lt;unordered_set&gt;
 #include &lt;unordered_map&gt;
 #include &lt;stdexcept&gt;
 
@@ -82,7 +83,10 @@ public:
 	}</span>
 
 <span style = "background-color:#dfd">	virtual bool isPerfectScore(const string&amp; leftStr, const string&amp; rightStr) const {
-		return true;
+		unordered_set&lt;char&gt; left, right;
+		for (char ch : leftStr) left.insert(ch);
+		for (char ch : rightStr) right.insert(ch);
+		return left == right;
 	}</span>
 
 <span style = "background-color:#dfd">	virtual int getPerfectScoure() const {
