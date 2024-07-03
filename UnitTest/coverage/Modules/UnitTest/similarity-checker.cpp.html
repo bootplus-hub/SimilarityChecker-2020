@@ -67,11 +67,45 @@ private:
 	static constexpr double ZERO_SCOURE_LIMIT = 0.5;
 };
 
+class AlphaChecker : public IChecker {
+public:
+<span style = "background-color:#dfd">	static shared_ptr&lt;IChecker&gt; newInstance() {
+		return shared_ptr&lt;IChecker&gt;{ new AlphaChecker() };
+	}</span>
+
+<span style = "background-color:#fdd">	virtual int score(const string&amp; leftStr, const string&amp; rightStr) const {
+		return PERFECT_SCOURE;
+	}</span>
+
+<span style = "background-color:#fdd">	virtual bool isZeroScore(const string&amp; leftStr, const string&amp; rightStr) const {
+		return false;
+	}</span>
+
+<span style = "background-color:#dfd">	virtual bool isPerfectScore(const string&amp; leftStr, const string&amp; rightStr) const {
+		return true;
+	}</span>
+
+<span style = "background-color:#dfd">	virtual int getPerfectScoure() const {
+		return PERFECT_SCOURE;
+	}</span>
+
+protected:
+<span style = "background-color:#dfd">	AlphaChecker() {}</span>
+
+<span style = "background-color:#fdd">	virtual void verifyZeroDivide(int leftLen, int rightLen) const {
+		if (leftLen &amp;&amp; rightLen) return;
+		throw invalid_argument("All should not be empty");
+	}</span>
+
+private:
+	static constexpr int PERFECT_SCOURE = 40;
+};
+
 
 class CheckerFactory {
 public:
 	enum CheckerType {
-		Length,
+		Length, Alpha
 	};
 
 <span style = "background-color:#dfd">	static CheckerFactory&amp; getInstance() {
@@ -88,6 +122,7 @@ public:
 protected:
 <span style = "background-color:#dfd">	CheckerFactory() {
 		addChecker(Length, LengthChecker::newInstance());
+		addChecker(Alpha, AlphaChecker::newInstance());
 	}</span>
 
 	CheckerFactory(const CheckerFactory&amp;) = delete;

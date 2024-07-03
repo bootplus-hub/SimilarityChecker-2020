@@ -56,11 +56,45 @@ private:
 	static constexpr double ZERO_SCOURE_LIMIT = 0.5;
 };
 
+class AlphaChecker : public IChecker {
+public:
+	static shared_ptr<IChecker> newInstance() {
+		return shared_ptr<IChecker>{ new AlphaChecker() };
+	}
+
+	virtual int score(const string& leftStr, const string& rightStr) const {
+		return PERFECT_SCOURE;
+	}
+
+	virtual bool isZeroScore(const string& leftStr, const string& rightStr) const {
+		return false;
+	}
+
+	virtual bool isPerfectScore(const string& leftStr, const string& rightStr) const {
+		return true;
+	}
+
+	virtual int getPerfectScoure() const {
+		return PERFECT_SCOURE;
+	}
+
+protected:
+	AlphaChecker() {}
+
+	virtual void verifyZeroDivide(int leftLen, int rightLen) const {
+		if (leftLen && rightLen) return;
+		throw invalid_argument("All should not be empty");
+	}
+
+private:
+	static constexpr int PERFECT_SCOURE = 40;
+};
+
 
 class CheckerFactory {
 public:
 	enum CheckerType {
-		Length,
+		Length, Alpha
 	};
 
 	static CheckerFactory& getInstance() {
@@ -77,6 +111,7 @@ public:
 protected:
 	CheckerFactory() {
 		addChecker(Length, LengthChecker::newInstance());
+		addChecker(Alpha, AlphaChecker::newInstance());
 	}
 
 	CheckerFactory(const CheckerFactory&) = delete;
