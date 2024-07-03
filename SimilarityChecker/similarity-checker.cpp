@@ -89,9 +89,6 @@ public:
 	}
 
 	int score(const string& leftStr, const string& rightStr) {
-		int leftLen = (int)leftStr.length();
-		int rightLen = (int)rightStr.length();
-
 		if (checker().isPerfectScore(leftStr, rightStr)) return checker().getPerfectScoure();
 		if (checker().isZeroScore(leftStr, rightStr)) return 0;
 		return checker().score(leftStr, rightStr);
