@@ -24,12 +24,14 @@ public:
 	virtual int score(const string& leftStr, const string& rightStr) const {
 		const int LEFT_LEN = (int)leftStr.length();
 		const int RIGHT_LEN = (int)rightStr.length();
+		verifyZeroDivide(LEFT_LEN, RIGHT_LEN);
 		return (int)((1 - abs(LEFT_LEN - RIGHT_LEN) / (double)min(LEFT_LEN, RIGHT_LEN)) * PERFECT_SCOURE);
 	}
 
 	virtual bool isZeroScore(const string& leftStr, const string& rightStr) const {
 		const int LEFT_LEN = (int)leftStr.length();
 		const int RIGHT_LEN = (int)rightStr.length();
+		verifyZeroDivide(LEFT_LEN, RIGHT_LEN);
 		return min(LEFT_LEN, RIGHT_LEN) / (double)max(LEFT_LEN, RIGHT_LEN) < ZERO_SCOURE_LIMIT;
 	}
 
@@ -43,6 +45,11 @@ public:
 
 protected:
 	LengthChecker() {}
+
+	virtual void verifyZeroDivide(int leftLen, int rightLen) const {
+		if (leftLen && rightLen) return;
+		throw invalid_argument("All should not be empty");
+	}
 
 private:
 	static constexpr int PERFECT_SCOURE = 60;

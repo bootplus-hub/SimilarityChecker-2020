@@ -16,6 +16,12 @@ TEST_F(SimilarityCheckerFixture, RuntimeError) {
 	EXPECT_THROW(checker.score("ASD", "DSA"), runtime_error);
 }
 
+TEST_F(SimilarityCheckerFixture, InvalidArgument) {
+	injectLength();
+
+	EXPECT_THROW(checker.score("ASD", ""), invalid_argument);
+}
+
 TEST_F(SimilarityCheckerFixture, Length60) {
 	injectLength();
 
