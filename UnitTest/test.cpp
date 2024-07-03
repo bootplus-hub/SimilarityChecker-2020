@@ -17,4 +17,5 @@ TEST(SimilarityCheckerLength, Length0) {
 TEST(SimilarityCheckerLength, LengthOther) {
 	SimilarityChecker checker;
 	EXPECT_EQ(20, checker.length("AAABB", "BAA"));
+	EXPECT_EQ(30, checker.length("AA", "AAE"));
 }
