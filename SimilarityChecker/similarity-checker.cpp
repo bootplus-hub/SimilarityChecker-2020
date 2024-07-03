@@ -102,6 +102,7 @@ protected:
 		if (_checker.get() == nullptr) throw runtime_error("Please inject the checker first");
 		return *_checker;
 	}
+
 private:
 	shared_ptr<IChecker> _checker;
 };
