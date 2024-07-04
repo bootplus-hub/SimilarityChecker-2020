@@ -96,11 +96,6 @@ protected:
 		return rst;
 	}
 
-	virtual void verifyZeroDivide(int leftLen, int rightLen) const {
-		if (leftLen && rightLen) return;
-		throw invalid_argument("All should not be empty");
-	}
-
 private:
 	static constexpr int PERFECT_SCOURE = 40;
 };
