@@ -13,7 +13,7 @@ interface IChecker {
 	virtual int score(const string& leftStr, const string& rightStr) const = 0;
 	virtual bool isZeroScore(const string& leftStr, const string& rightStr) const = 0;
 	virtual bool isPerfectScore(const string& leftStr, const string& rightStr) const = 0;
-	virtual int getPerfectScoure() const = 0;
+	virtual int getPerfectScore() const = 0;
 };
 
 class LengthChecker : public IChecker {
@@ -40,7 +40,7 @@ public:
 		return leftStr.length() == rightStr.length();
 	}
 
-	virtual int getPerfectScoure() const {
+	virtual int getPerfectScore() const {
 		return PERFECT_SCOURE;
 	}
 
@@ -93,7 +93,7 @@ public:
 		return left == right;
 	}
 
-	virtual int getPerfectScoure() const {
+	virtual int getPerfectScore() const {
 		return PERFECT_SCOURE;
 	}
 
@@ -170,7 +170,7 @@ public:
 	}
 
 	int score(const string& leftStr, const string& rightStr) {
-		if (checker().isPerfectScore(leftStr, rightStr)) return checker().getPerfectScoure();
+		if (checker().isPerfectScore(leftStr, rightStr)) return checker().getPerfectScore();
 		if (checker().isZeroScore(leftStr, rightStr)) return 0;
 		return checker().score(leftStr, rightStr);
 	}

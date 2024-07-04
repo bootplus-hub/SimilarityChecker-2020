@@ -24,7 +24,7 @@ interface IChecker {
 	virtual int score(const string&amp; leftStr, const string&amp; rightStr) const = 0;
 	virtual bool isZeroScore(const string&amp; leftStr, const string&amp; rightStr) const = 0;
 	virtual bool isPerfectScore(const string&amp; leftStr, const string&amp; rightStr) const = 0;
-	virtual int getPerfectScoure() const = 0;
+	virtual int getPerfectScore() const = 0;
 };
 
 class LengthChecker : public IChecker {
@@ -51,7 +51,7 @@ public:
 		return leftStr.length() == rightStr.length();
 	}</span>
 
-<span style = "background-color:#dfd">	virtual int getPerfectScoure() const {
+<span style = "background-color:#dfd">	virtual int getPerfectScore() const {
 		return PERFECT_SCOURE;
 	}</span>
 
@@ -104,7 +104,7 @@ public:
 		return left == right;
 	}</span>
 
-<span style = "background-color:#dfd">	virtual int getPerfectScoure() const {
+<span style = "background-color:#dfd">	virtual int getPerfectScore() const {
 		return PERFECT_SCOURE;
 	}</span>
 
@@ -181,7 +181,7 @@ public:
 	}</span>
 
 <span style = "background-color:#dfd">	int score(const string&amp; leftStr, const string&amp; rightStr) {
-		if (checker().isPerfectScore(leftStr, rightStr)) return checker().getPerfectScoure();
+		if (checker().isPerfectScore(leftStr, rightStr)) return checker().getPerfectScore();
 		if (checker().isZeroScore(leftStr, rightStr)) return 0;
 		return checker().score(leftStr, rightStr);
 	}</span>
