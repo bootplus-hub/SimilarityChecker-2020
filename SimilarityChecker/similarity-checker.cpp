@@ -68,30 +68,25 @@ public:
 	virtual int score(const string& leftStr, const string& rightStr) const override {
 		unordered_set<char> left = parsingChars(leftStr)
 			, right = parsingChars(rightStr);
+
+		if (isPerfectScore(left, right)) return PERFECT_SCOURE;
+		if (isZeroScore(left, right)) return 0;
+
 		return (int)(getRate(left, right) * PERFECT_SCOURE);
 	}
 
 protected:
 	AlphaChecker() {}
 
-	virtual bool isZeroScore(const string& leftStr, const string& rightStr) const {
-		unordered_set<char> left = parsingChars(leftStr)
-			, right = parsingChars(rightStr);
-
+	virtual bool isZeroScore(const unordered_set<char>& left, const unordered_set<char>& right) const {
 		for (auto ch : left) {
 			if (right.count(ch)) return false;
 		}
 		return true;
 	}
 
-	virtual bool isPerfectScore(const string& leftStr, const string& rightStr) const {
-		unordered_set<char> left = parsingChars(leftStr)
-			, right = parsingChars(rightStr);
+	virtual bool isPerfectScore(const unordered_set<char>& left, const unordered_set<char>& right) const {
 		return left == right;
-	}
-
-	virtual int getPerfectScore() const {
-		return PERFECT_SCOURE;
 	}
 
 	virtual unordered_set<char> parsingChars(const string& str) const {
