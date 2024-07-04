@@ -57,3 +57,10 @@ TEST_F(SimilarityCheckerFixture, AlphaZero) {
 	EXPECT_EQ(0, checker.score("A", "BB"));
 	EXPECT_EQ(0, checker.score("", "BB"));
 }
+
+TEST_F(SimilarityCheckerFixture, AlphaOhter) {
+	injectAlpha();
+
+	EXPECT_EQ(20, checker.score("A", "AAE"));
+	EXPECT_EQ(20, checker.score("E", "AAE"));
+}

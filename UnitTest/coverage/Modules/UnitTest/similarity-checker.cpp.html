@@ -74,8 +74,18 @@ public:
 		return shared_ptr&lt;IChecker&gt;{ new AlphaChecker() };
 	}</span>
 
-<span style = "background-color:#fdd">	virtual int score(const string&amp; leftStr, const string&amp; rightStr) const {
-		return PERFECT_SCOURE;
+<span style = "background-color:#dfd">	virtual int score(const string&amp; leftStr, const string&amp; rightStr) const {
+		unordered_set&lt;char&gt; left = parsingChars(leftStr)
+			, right = parsingChars(rightStr)
+			, total;
+		total.insert(left.begin(), left.end());
+		total.insert(right.begin(), right.end());</span>
+
+<span style = "background-color:#dfd">		int sameCnt = 0;
+		for (char ch : left) {
+			sameCnt += (int)right.count(ch);
+		}
+		return (int)(sameCnt / (double)total.size() * PERFECT_SCOURE);
 	}</span>
 
 <span style = "background-color:#dfd">	virtual bool isZeroScore(const string&amp; leftStr, const string&amp; rightStr) const {

@@ -64,7 +64,17 @@ public:
 	}
 
 	virtual int score(const string& leftStr, const string& rightStr) const {
-		return PERFECT_SCOURE;
+		unordered_set<char> left = parsingChars(leftStr)
+			, right = parsingChars(rightStr)
+			, total;
+		total.insert(left.begin(), left.end());
+		total.insert(right.begin(), right.end());
+
+		int sameCnt = 0;
+		for (char ch : left) {
+			sameCnt += (int)right.count(ch);
+		}
+		return (int)(sameCnt / (double)total.size() * PERFECT_SCOURE);
 	}
 
 	virtual bool isZeroScore(const string& leftStr, const string& rightStr) const {
