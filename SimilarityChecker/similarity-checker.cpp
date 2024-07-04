@@ -66,6 +66,9 @@ public:
 	}
 
 	virtual int score(const string& leftStr, const string& rightStr) const override {
+		verifyCharactors(leftStr);
+		verifyCharactors(rightStr);
+
 		unordered_set<char> left = parsingChars(leftStr)
 			, right = parsingChars(rightStr);
 
@@ -112,6 +115,12 @@ protected:
 
 	virtual double getScoreRate(const unordered_set<char>& left, const unordered_set<char>& right) const {
 		return getSameCount(left, right) / (double)getTotalCount(left, right);
+	}
+
+	virtual void verifyCharactors(const string& str) const {
+		for (char ch : str) {
+			if (ch < 'A' || ch > 'Z') throw invalid_argument("All should A-Z charactors");
+		}
 	}
 
 private:

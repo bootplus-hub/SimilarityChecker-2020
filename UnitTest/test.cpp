@@ -64,3 +64,9 @@ TEST_F(SimilarityCheckerFixture, AlphaOhter) {
 	EXPECT_EQ(20, checker.score("A", "AAE"));
 	EXPECT_EQ(20, checker.score("E", "AAE"));
 }
+
+TEST_F(SimilarityCheckerFixture, AlphaInvalidArgument) {
+	injectAlpha();
+	
+	EXPECT_THROW(checker.score("A", "AaE"), invalid_argument);
+}

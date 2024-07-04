@@ -77,7 +77,10 @@ public:
 	}</span>
 
 <span style = "background-color:#dfd">	virtual int score(const string&amp; leftStr, const string&amp; rightStr) const override {
-		unordered_set&lt;char&gt; left = parsingChars(leftStr)
+		verifyCharactors(leftStr);
+		verifyCharactors(rightStr);</span>
+
+<span style = "background-color:#dfd">		unordered_set&lt;char&gt; left = parsingChars(leftStr)
 			, right = parsingChars(rightStr);</span>
 
 <span style = "background-color:#dfd">		if (isPerfectScore(left, right)) return PERFECT_SCOURE;
@@ -123,6 +126,12 @@ protected:
 
 <span style = "background-color:#dfd">	virtual double getScoreRate(const unordered_set&lt;char&gt;&amp; left, const unordered_set&lt;char&gt;&amp; right) const {
 		return getSameCount(left, right) / (double)getTotalCount(left, right);
+	}</span>
+
+<span style = "background-color:#dfd">	virtual void verifyCharactors(const string&amp; str) const {
+		for (char ch : str) {
+			if (ch &lt; 'A' || ch &gt; 'Z') throw invalid_argument("All should A-Z charactors");
+		}
 	}</span>
 
 private:
