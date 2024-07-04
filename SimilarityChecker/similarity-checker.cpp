@@ -26,14 +26,14 @@ public:
 		const int LEFT_LEN = (int)leftStr.length();
 		const int RIGHT_LEN = (int)rightStr.length();
 		verifyZeroDivide(LEFT_LEN, RIGHT_LEN);
-		return (int)((1 - abs(LEFT_LEN - RIGHT_LEN) / (double)min(LEFT_LEN, RIGHT_LEN)) * PERFECT_SCOURE);
+		return (int)(getScoreRate(LEFT_LEN, RIGHT_LEN) * PERFECT_SCOURE);
 	}
 
 	virtual bool isZeroScore(const string& leftStr, const string& rightStr) const {
 		const int LEFT_LEN = (int)leftStr.length();
 		const int RIGHT_LEN = (int)rightStr.length();
 		verifyZeroDivide(LEFT_LEN, RIGHT_LEN);
-		return min(LEFT_LEN, RIGHT_LEN) / (double)max(LEFT_LEN, RIGHT_LEN) < ZERO_SCOURE_LIMIT;
+		return getZeroRate(LEFT_LEN, RIGHT_LEN) < ZERO_SCOURE_LIMIT;
 	}
 
 	virtual bool isPerfectScore(const string& leftStr, const string& rightStr) const {
@@ -50,6 +50,14 @@ protected:
 	virtual void verifyZeroDivide(int leftLen, int rightLen) const {
 		if (leftLen && rightLen) return;
 		throw invalid_argument("All should not be empty");
+	}
+
+	virtual double getScoreRate(int leftLen, int rightLen) const {
+		return 1 - abs(leftLen - rightLen) / (double)min(leftLen, rightLen);
+	}
+
+	virtual double getZeroRate(int leftLen, int rightLen) const {
+		return min(leftLen, rightLen) / (double)max(leftLen, rightLen);
 	}
 
 private:
