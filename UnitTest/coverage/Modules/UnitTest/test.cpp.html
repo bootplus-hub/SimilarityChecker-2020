@@ -20,6 +20,9 @@ public:
 	SimilarityChecker checker;
 <span style = "background-color:#dfd">	void injectLength() {
 		checker.injectChecker(CheckerFactory::getInstance().getChecker(CheckerFactory::Length));
+	}
+	void injectAlpha() {
+		checker.injectChecker(CheckerFactory::getInstance().getChecker(CheckerFactory::Alpha));
 	}</span>
 };
 
@@ -50,6 +53,33 @@ public:
 
 <span style = "background-color:#dfd">	EXPECT_EQ(20, checker.score("AAABB", "BAA"));
 	EXPECT_EQ(30, checker.score("AA", "AAE"));
+}</span>
+
+<span style = "background-color:#dfd">TEST_F(SimilarityCheckerFixture, AlphaPerfact) {
+	injectAlpha();</span>
+
+<span style = "background-color:#dfd">	EXPECT_EQ(40, checker.score("ASD", "DSA"));
+	EXPECT_EQ(40, checker.score("AAABB", "BA"));
+}</span>
+
+<span style = "background-color:#dfd">TEST_F(SimilarityCheckerFixture, AlphaZero) {
+	injectAlpha();</span>
+
+<span style = "background-color:#dfd">	EXPECT_EQ(0, checker.score("A", "BB"));
+	EXPECT_EQ(0, checker.score("", "BB"));
+}</span>
+
+<span style = "background-color:#dfd">TEST_F(SimilarityCheckerFixture, AlphaOhter) {
+	injectAlpha();</span>
+
+<span style = "background-color:#dfd">	EXPECT_EQ(20, checker.score("A", "AAE"));
+	EXPECT_EQ(20, checker.score("E", "AAE"));
+}</span>
+
+<span style = "background-color:#dfd">TEST_F(SimilarityCheckerFixture, AlphaInvalidArgument) {
+	injectAlpha();</span>
+	
+<span style = "background-color:#dfd">	EXPECT_THROW(checker.score("A", "AaE"), invalid_argument);
 }</span></pre>
         <hr />
         <table width="100%">

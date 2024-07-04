@@ -1,6 +1,7 @@
 #include <string>
 #include <algorithm>
 #include <memory>
+#include <unordered_set>
 #include <unordered_map>
 #include <stdexcept>
 
@@ -10,9 +11,6 @@ using namespace std;
 
 interface IChecker {
 	virtual int score(const string& leftStr, const string& rightStr) const = 0;
-	virtual bool isZeroScore(const string& leftStr, const string& rightStr) const = 0;
-	virtual bool isPerfectScore(const string& leftStr, const string& rightStr) const = 0;
-	virtual int getPerfectScoure() const = 0;
 };
 
 class LengthChecker : public IChecker {
@@ -21,34 +19,39 @@ public:
 		return shared_ptr<IChecker>{ new LengthChecker() };
 	}
 
-	virtual int score(const string& leftStr, const string& rightStr) const {
+	virtual int score(const string& leftStr, const string& rightStr) const override {
 		const int LEFT_LEN = (int)leftStr.length();
 		const int RIGHT_LEN = (int)rightStr.length();
+		
+		if (isPerfectScore(leftStr, rightStr)) return PERFECT_SCOURE;
+		
 		verifyZeroDivide(LEFT_LEN, RIGHT_LEN);
-		return (int)((1 - abs(LEFT_LEN - RIGHT_LEN) / (double)min(LEFT_LEN, RIGHT_LEN)) * PERFECT_SCOURE);
+		if (isZeroScore(LEFT_LEN, RIGHT_LEN)) return 0;
+		return (int)(getScoreRate(LEFT_LEN, RIGHT_LEN) * PERFECT_SCOURE);
 	}
 
-	virtual bool isZeroScore(const string& leftStr, const string& rightStr) const {
-		const int LEFT_LEN = (int)leftStr.length();
-		const int RIGHT_LEN = (int)rightStr.length();
-		verifyZeroDivide(LEFT_LEN, RIGHT_LEN);
-		return min(LEFT_LEN, RIGHT_LEN) / (double)max(LEFT_LEN, RIGHT_LEN) < ZERO_SCOURE_LIMIT;
+protected:
+	LengthChecker() {}
+
+	virtual bool isZeroScore(int leftLen, int rightLen) const {
+		return getZeroRate(leftLen, rightLen) < ZERO_SCOURE_LIMIT;
 	}
 
 	virtual bool isPerfectScore(const string& leftStr, const string& rightStr) const {
 		return leftStr.length() == rightStr.length();
 	}
 
-	virtual int getPerfectScoure() const {
-		return PERFECT_SCOURE;
-	}
-
-protected:
-	LengthChecker() {}
-
 	virtual void verifyZeroDivide(int leftLen, int rightLen) const {
 		if (leftLen && rightLen) return;
 		throw invalid_argument("All should not be empty");
+	}
+
+	virtual double getScoreRate(int leftLen, int rightLen) const {
+		return 1 - abs(leftLen - rightLen) / (double)min(leftLen, rightLen);
+	}
+
+	virtual double getZeroRate(int leftLen, int rightLen) const {
+		return min(leftLen, rightLen) / (double)max(leftLen, rightLen);
 	}
 
 private:
@@ -56,11 +59,79 @@ private:
 	static constexpr double ZERO_SCOURE_LIMIT = 0.5;
 };
 
+class AlphaChecker : public IChecker {
+public:
+	static shared_ptr<IChecker> newInstance() {
+		return shared_ptr<IChecker>{ new AlphaChecker() };
+	}
+
+	virtual int score(const string& leftStr, const string& rightStr) const override {
+		verifyCharactors(leftStr);
+		verifyCharactors(rightStr);
+
+		unordered_set<char> left = parsingChars(leftStr)
+			, right = parsingChars(rightStr);
+
+		if (isPerfectScore(left, right)) return PERFECT_SCOURE;
+		if (isZeroScore(left, right)) return 0;
+
+		return (int)(getScoreRate(left, right) * PERFECT_SCOURE);
+	}
+
+protected:
+	AlphaChecker() {}
+
+	virtual bool isZeroScore(const unordered_set<char>& left, const unordered_set<char>& right) const {
+		for (auto ch : left) {
+			if (right.count(ch)) return false;
+		}
+		return true;
+	}
+
+	virtual bool isPerfectScore(const unordered_set<char>& left, const unordered_set<char>& right) const {
+		return left == right;
+	}
+
+	virtual unordered_set<char> parsingChars(const string& str) const {
+		unordered_set<char> rst;
+		for (char ch : str) rst.insert(ch);
+		return rst;
+	}
+
+	virtual int getSameCount(const unordered_set<char>& left, const unordered_set<char>& right) const {
+		int ans = 0;
+		for (char ch : left) {
+			ans += (int)right.count(ch);
+		}
+		return ans;
+	}
+
+	virtual int getTotalCount(const unordered_set<char>& left, const unordered_set<char>& right) const {
+		unordered_set<char> ans;
+		ans.insert(left.begin(), left.end());
+		ans.insert(right.begin(), right.end());
+		return (int)ans.size();
+	}
+
+	virtual double getScoreRate(const unordered_set<char>& left, const unordered_set<char>& right) const {
+		return getSameCount(left, right) / (double)getTotalCount(left, right);
+	}
+
+	virtual void verifyCharactors(const string& str) const {
+		for (char ch : str) {
+			if (ch < 'A' || ch > 'Z') throw invalid_argument("All should A-Z charactors");
+		}
+	}
+
+private:
+	static constexpr int PERFECT_SCOURE = 40;
+};
+
 
 class CheckerFactory {
 public:
 	enum CheckerType {
-		Length,
+		Length, Alpha
 	};
 
 	static CheckerFactory& getInstance() {
@@ -77,6 +148,7 @@ public:
 protected:
 	CheckerFactory() {
 		addChecker(Length, LengthChecker::newInstance());
+		addChecker(Alpha, AlphaChecker::newInstance());
 	}
 
 	CheckerFactory(const CheckerFactory&) = delete;
@@ -96,8 +168,6 @@ public:
 	}
 
 	int score(const string& leftStr, const string& rightStr) {
-		if (checker().isPerfectScore(leftStr, rightStr)) return checker().getPerfectScoure();
-		if (checker().isZeroScore(leftStr, rightStr)) return 0;
 		return checker().score(leftStr, rightStr);
 	}
 
