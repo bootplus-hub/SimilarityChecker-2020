@@ -72,7 +72,7 @@ public:
 		if (isPerfectScore(left, right)) return PERFECT_SCOURE;
 		if (isZeroScore(left, right)) return 0;
 
-		return (int)(getRate(left, right) * PERFECT_SCOURE);
+		return (int)(getScoreRate(left, right) * PERFECT_SCOURE);
 	}
 
 protected:
@@ -110,7 +110,7 @@ protected:
 		return (int)ans.size();
 	}
 
-	virtual double getRate(const unordered_set<char>& left, const unordered_set<char>& right) const {
+	virtual double getScoreRate(const unordered_set<char>& left, const unordered_set<char>& right) const {
 		return getSameCount(left, right) / (double)getTotalCount(left, right);
 	}
 

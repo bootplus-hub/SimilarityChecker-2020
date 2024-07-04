@@ -83,7 +83,7 @@ public:
 <span style = "background-color:#dfd">		if (isPerfectScore(left, right)) return PERFECT_SCOURE;
 		if (isZeroScore(left, right)) return 0;</span>
 
-<span style = "background-color:#dfd">		return (int)(getRate(left, right) * PERFECT_SCOURE);
+<span style = "background-color:#dfd">		return (int)(getScoreRate(left, right) * PERFECT_SCOURE);
 	}</span>
 
 protected:
@@ -121,7 +121,7 @@ protected:
 		return (int)ans.size();
 	}</span>
 
-<span style = "background-color:#dfd">	virtual double getRate(const unordered_set&lt;char&gt;&amp; left, const unordered_set&lt;char&gt;&amp; right) const {
+<span style = "background-color:#dfd">	virtual double getScoreRate(const unordered_set&lt;char&gt;&amp; left, const unordered_set&lt;char&gt;&amp; right) const {
 		return getSameCount(left, right) / (double)getTotalCount(left, right);
 	}</span>
 
