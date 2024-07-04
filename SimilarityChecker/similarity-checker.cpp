@@ -65,16 +65,8 @@ public:
 
 	virtual int score(const string& leftStr, const string& rightStr) const {
 		unordered_set<char> left = parsingChars(leftStr)
-			, right = parsingChars(rightStr)
-			, total;
-		total.insert(left.begin(), left.end());
-		total.insert(right.begin(), right.end());
-
-		int sameCnt = 0;
-		for (char ch : left) {
-			sameCnt += (int)right.count(ch);
-		}
-		return (int)(sameCnt / (double)total.size() * PERFECT_SCOURE);
+			, right = parsingChars(rightStr);
+		return (int)(getRate(left, right) * PERFECT_SCOURE);
 	}
 
 	virtual bool isZeroScore(const string& leftStr, const string& rightStr) const {
@@ -104,6 +96,25 @@ protected:
 		unordered_set<char> rst;
 		for (char ch : str) rst.insert(ch);
 		return rst;
+	}
+
+	virtual int getSameCount(const unordered_set<char>& left, const unordered_set<char>& right) const {
+		int ans = 0;
+		for (char ch : left) {
+			ans += (int)right.count(ch);
+		}
+		return ans;
+	}
+
+	virtual int getTotalCount(const unordered_set<char>& left, const unordered_set<char>& right) const {
+		unordered_set<char> ans;
+		ans.insert(left.begin(), left.end());
+		ans.insert(right.begin(), right.end());
+		return (int)ans.size();
+	}
+
+	virtual double getRate(const unordered_set<char>& left, const unordered_set<char>& right) const {
+		return getSameCount(left, right) / (double)getTotalCount(left, right);
 	}
 
 private:
