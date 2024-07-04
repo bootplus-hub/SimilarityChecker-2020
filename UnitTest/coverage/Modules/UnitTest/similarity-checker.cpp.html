@@ -78,14 +78,19 @@ public:
 		return PERFECT_SCOURE;
 	}</span>
 
-<span style = "background-color:#fdd">	virtual bool isZeroScore(const string&amp; leftStr, const string&amp; rightStr) const {
-		return false;
+<span style = "background-color:#dfd">	virtual bool isZeroScore(const string&amp; leftStr, const string&amp; rightStr) const {
+		unordered_set&lt;char&gt; left = parsingChars(leftStr)
+			, right = parsingChars(rightStr);</span>
+		
+<span style = "background-color:#dfd">		for (auto ch : left) {
+			if (right.count(ch)) return false;
+		}
+		return true;
 	}</span>
 
 <span style = "background-color:#dfd">	virtual bool isPerfectScore(const string&amp; leftStr, const string&amp; rightStr) const {
-		unordered_set&lt;char&gt; left, right;
-		for (char ch : leftStr) left.insert(ch);
-		for (char ch : rightStr) right.insert(ch);
+		unordered_set&lt;char&gt; left = parsingChars(leftStr)
+			, right = parsingChars(rightStr);
 		return left == right;
 	}</span>
 
@@ -95,6 +100,12 @@ public:
 
 protected:
 <span style = "background-color:#dfd">	AlphaChecker() {}</span>
+
+<span style = "background-color:#dfd">	virtual unordered_set&lt;char&gt; parsingChars(const string&amp; str) const {
+		unordered_set&lt;char&gt; rst;
+		for (char ch : str) rst.insert(ch);
+		return rst;
+	}</span>
 
 <span style = "background-color:#fdd">	virtual void verifyZeroDivide(int leftLen, int rightLen) const {
 		if (leftLen &amp;&amp; rightLen) return;

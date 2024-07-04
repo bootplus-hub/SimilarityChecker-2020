@@ -68,13 +68,18 @@ public:
 	}
 
 	virtual bool isZeroScore(const string& leftStr, const string& rightStr) const {
-		return false;
+		unordered_set<char> left = parsingChars(leftStr)
+			, right = parsingChars(rightStr);
+		
+		for (auto ch : left) {
+			if (right.count(ch)) return false;
+		}
+		return true;
 	}
 
 	virtual bool isPerfectScore(const string& leftStr, const string& rightStr) const {
-		unordered_set<char> left, right;
-		for (char ch : leftStr) left.insert(ch);
-		for (char ch : rightStr) right.insert(ch);
+		unordered_set<char> left = parsingChars(leftStr)
+			, right = parsingChars(rightStr);
 		return left == right;
 	}
 
@@ -84,6 +89,12 @@ public:
 
 protected:
 	AlphaChecker() {}
+
+	virtual unordered_set<char> parsingChars(const string& str) const {
+		unordered_set<char> rst;
+		for (char ch : str) rst.insert(ch);
+		return rst;
+	}
 
 	virtual void verifyZeroDivide(int leftLen, int rightLen) const {
 		if (leftLen && rightLen) return;
