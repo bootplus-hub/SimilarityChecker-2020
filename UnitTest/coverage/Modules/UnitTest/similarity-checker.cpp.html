@@ -22,9 +22,6 @@ using namespace std;
 
 interface IChecker {
 	virtual int score(const string&amp; leftStr, const string&amp; rightStr) const = 0;
-	virtual bool isZeroScore(const string&amp; leftStr, const string&amp; rightStr) const = 0;
-	virtual bool isPerfectScore(const string&amp; leftStr, const string&amp; rightStr) const = 0;
-	virtual int getPerfectScore() const = 0;
 };
 
 class LengthChecker : public IChecker {
@@ -33,30 +30,27 @@ public:
 		return shared_ptr&lt;IChecker&gt;{ new LengthChecker() };
 	}</span>
 
-<span style = "background-color:#dfd">	virtual int score(const string&amp; leftStr, const string&amp; rightStr) const {
+<span style = "background-color:#dfd">	virtual int score(const string&amp; leftStr, const string&amp; rightStr) const override {
 		const int LEFT_LEN = (int)leftStr.length();
-		const int RIGHT_LEN = (int)rightStr.length();
-		verifyZeroDivide(LEFT_LEN, RIGHT_LEN);
+		const int RIGHT_LEN = (int)rightStr.length();</span>
+		
+<span style = "background-color:#dfd">		if (isPerfectScore(leftStr, rightStr)) return PERFECT_SCOURE;</span>
+		
+<span style = "background-color:#dfd">		verifyZeroDivide(LEFT_LEN, RIGHT_LEN);
+		if (isZeroScore(LEFT_LEN, RIGHT_LEN)) return 0;
 		return (int)(getScoreRate(LEFT_LEN, RIGHT_LEN) * PERFECT_SCOURE);
 	}</span>
 
-<span style = "background-color:#dfd">	virtual bool isZeroScore(const string&amp; leftStr, const string&amp; rightStr) const {
-		const int LEFT_LEN = (int)leftStr.length();
-		const int RIGHT_LEN = (int)rightStr.length();
-		verifyZeroDivide(LEFT_LEN, RIGHT_LEN);
-		return getZeroRate(LEFT_LEN, RIGHT_LEN) &lt; ZERO_SCOURE_LIMIT;
+protected:
+<span style = "background-color:#dfd">	LengthChecker() {}</span>
+
+<span style = "background-color:#dfd">	virtual bool isZeroScore(int leftLen, int rightLen) const {
+		return getZeroRate(leftLen, rightLen) &lt; ZERO_SCOURE_LIMIT;
 	}</span>
 
 <span style = "background-color:#dfd">	virtual bool isPerfectScore(const string&amp; leftStr, const string&amp; rightStr) const {
 		return leftStr.length() == rightStr.length();
 	}</span>
-
-<span style = "background-color:#dfd">	virtual int getPerfectScore() const {
-		return PERFECT_SCOURE;
-	}</span>
-
-protected:
-<span style = "background-color:#dfd">	LengthChecker() {}</span>
 
 <span style = "background-color:#dfd">	virtual void verifyZeroDivide(int leftLen, int rightLen) const {
 		if (leftLen &amp;&amp; rightLen) return;
@@ -82,42 +76,42 @@ public:
 		return shared_ptr&lt;IChecker&gt;{ new AlphaChecker() };
 	}</span>
 
-<span style = "background-color:#dfd">	virtual int score(const string&amp; leftStr, const string&amp; rightStr) const {
+<span style = "background-color:#fdd">	virtual int score(const string&amp; leftStr, const string&amp; rightStr) const override {
 		unordered_set&lt;char&gt; left = parsingChars(leftStr)
 			, right = parsingChars(rightStr);
 		return (int)(getRate(left, right) * PERFECT_SCOURE);
 	}</span>
 
-<span style = "background-color:#dfd">	virtual bool isZeroScore(const string&amp; leftStr, const string&amp; rightStr) const {
+protected:
+<span style = "background-color:#dfd">	AlphaChecker() {}</span>
+
+<span style = "background-color:#fdd">	virtual bool isZeroScore(const string&amp; leftStr, const string&amp; rightStr) const {
 		unordered_set&lt;char&gt; left = parsingChars(leftStr)
 			, right = parsingChars(rightStr);</span>
-		
-<span style = "background-color:#dfd">		for (auto ch : left) {
+
+<span style = "background-color:#fdd">		for (auto ch : left) {
 			if (right.count(ch)) return false;
 		}
 		return true;
 	}</span>
 
-<span style = "background-color:#dfd">	virtual bool isPerfectScore(const string&amp; leftStr, const string&amp; rightStr) const {
+<span style = "background-color:#fdd">	virtual bool isPerfectScore(const string&amp; leftStr, const string&amp; rightStr) const {
 		unordered_set&lt;char&gt; left = parsingChars(leftStr)
 			, right = parsingChars(rightStr);
 		return left == right;
 	}</span>
 
-<span style = "background-color:#dfd">	virtual int getPerfectScore() const {
+<span style = "background-color:#fdd">	virtual int getPerfectScore() const {
 		return PERFECT_SCOURE;
 	}</span>
 
-protected:
-<span style = "background-color:#dfd">	AlphaChecker() {}</span>
-
-<span style = "background-color:#dfd">	virtual unordered_set&lt;char&gt; parsingChars(const string&amp; str) const {
+<span style = "background-color:#fdd">	virtual unordered_set&lt;char&gt; parsingChars(const string&amp; str) const {
 		unordered_set&lt;char&gt; rst;
 		for (char ch : str) rst.insert(ch);
 		return rst;
 	}</span>
 
-<span style = "background-color:#dfd">	virtual int getSameCount(const unordered_set&lt;char&gt;&amp; left, const unordered_set&lt;char&gt;&amp; right) const {
+<span style = "background-color:#fdd">	virtual int getSameCount(const unordered_set&lt;char&gt;&amp; left, const unordered_set&lt;char&gt;&amp; right) const {
 		int ans = 0;
 		for (char ch : left) {
 			ans += (int)right.count(ch);
@@ -125,14 +119,14 @@ protected:
 		return ans;
 	}</span>
 
-<span style = "background-color:#dfd">	virtual int getTotalCount(const unordered_set&lt;char&gt;&amp; left, const unordered_set&lt;char&gt;&amp; right) const {
+<span style = "background-color:#fdd">	virtual int getTotalCount(const unordered_set&lt;char&gt;&amp; left, const unordered_set&lt;char&gt;&amp; right) const {
 		unordered_set&lt;char&gt; ans;
 		ans.insert(left.begin(), left.end());
 		ans.insert(right.begin(), right.end());
 		return (int)ans.size();
 	}</span>
 
-<span style = "background-color:#dfd">	virtual double getRate(const unordered_set&lt;char&gt;&amp; left, const unordered_set&lt;char&gt;&amp; right) const {
+<span style = "background-color:#fdd">	virtual double getRate(const unordered_set&lt;char&gt;&amp; left, const unordered_set&lt;char&gt;&amp; right) const {
 		return getSameCount(left, right) / (double)getTotalCount(left, right);
 	}</span>
 
@@ -181,8 +175,6 @@ public:
 	}</span>
 
 <span style = "background-color:#dfd">	int score(const string&amp; leftStr, const string&amp; rightStr) {
-		if (checker().isPerfectScore(leftStr, rightStr)) return checker().getPerfectScore();
-		if (checker().isZeroScore(leftStr, rightStr)) return 0;
 		return checker().score(leftStr, rightStr);
 	}</span>
 

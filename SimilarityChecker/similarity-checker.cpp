@@ -11,9 +11,6 @@ using namespace std;
 
 interface IChecker {
 	virtual int score(const string& leftStr, const string& rightStr) const = 0;
-	virtual bool isZeroScore(const string& leftStr, const string& rightStr) const = 0;
-	virtual bool isPerfectScore(const string& leftStr, const string& rightStr) const = 0;
-	virtual int getPerfectScore() const = 0;
 };
 
 class LengthChecker : public IChecker {
@@ -22,30 +19,27 @@ public:
 		return shared_ptr<IChecker>{ new LengthChecker() };
 	}
 
-	virtual int score(const string& leftStr, const string& rightStr) const {
+	virtual int score(const string& leftStr, const string& rightStr) const override {
 		const int LEFT_LEN = (int)leftStr.length();
 		const int RIGHT_LEN = (int)rightStr.length();
+		
+		if (isPerfectScore(leftStr, rightStr)) return PERFECT_SCOURE;
+		
 		verifyZeroDivide(LEFT_LEN, RIGHT_LEN);
+		if (isZeroScore(LEFT_LEN, RIGHT_LEN)) return 0;
 		return (int)(getScoreRate(LEFT_LEN, RIGHT_LEN) * PERFECT_SCOURE);
 	}
 
-	virtual bool isZeroScore(const string& leftStr, const string& rightStr) const {
-		const int LEFT_LEN = (int)leftStr.length();
-		const int RIGHT_LEN = (int)rightStr.length();
-		verifyZeroDivide(LEFT_LEN, RIGHT_LEN);
-		return getZeroRate(LEFT_LEN, RIGHT_LEN) < ZERO_SCOURE_LIMIT;
+protected:
+	LengthChecker() {}
+
+	virtual bool isZeroScore(int leftLen, int rightLen) const {
+		return getZeroRate(leftLen, rightLen) < ZERO_SCOURE_LIMIT;
 	}
 
 	virtual bool isPerfectScore(const string& leftStr, const string& rightStr) const {
 		return leftStr.length() == rightStr.length();
 	}
-
-	virtual int getPerfectScore() const {
-		return PERFECT_SCOURE;
-	}
-
-protected:
-	LengthChecker() {}
 
 	virtual void verifyZeroDivide(int leftLen, int rightLen) const {
 		if (leftLen && rightLen) return;
@@ -71,16 +65,19 @@ public:
 		return shared_ptr<IChecker>{ new AlphaChecker() };
 	}
 
-	virtual int score(const string& leftStr, const string& rightStr) const {
+	virtual int score(const string& leftStr, const string& rightStr) const override {
 		unordered_set<char> left = parsingChars(leftStr)
 			, right = parsingChars(rightStr);
 		return (int)(getRate(left, right) * PERFECT_SCOURE);
 	}
 
+protected:
+	AlphaChecker() {}
+
 	virtual bool isZeroScore(const string& leftStr, const string& rightStr) const {
 		unordered_set<char> left = parsingChars(leftStr)
 			, right = parsingChars(rightStr);
-		
+
 		for (auto ch : left) {
 			if (right.count(ch)) return false;
 		}
@@ -96,9 +93,6 @@ public:
 	virtual int getPerfectScore() const {
 		return PERFECT_SCOURE;
 	}
-
-protected:
-	AlphaChecker() {}
 
 	virtual unordered_set<char> parsingChars(const string& str) const {
 		unordered_set<char> rst;
@@ -170,8 +164,6 @@ public:
 	}
 
 	int score(const string& leftStr, const string& rightStr) {
-		if (checker().isPerfectScore(leftStr, rightStr)) return checker().getPerfectScore();
-		if (checker().isZeroScore(leftStr, rightStr)) return 0;
 		return checker().score(leftStr, rightStr);
 	}
 
